@@ -4,13 +4,13 @@ import java.util.Objects;
 
 public class Task {
     protected String name;
-    protected String desctiption;
+    protected String description;
     protected int id;
     protected TaskStatus status;
 
-    public Task(String name, String desctiption, int id, TaskStatus status) {
+    public Task(String name, String description, int id, TaskStatus status) {
         this.name = name;
-        this.desctiption = desctiption;
+        this.description = description;
         this.id = id;
         this.status = status;
     }
@@ -19,8 +19,8 @@ public class Task {
         return name;
     }
 
-    public String getDesctiption() {
-        return desctiption;
+    public String getDescription() {
+        return description;
     }
 
     public int getId() {
@@ -31,17 +31,21 @@ public class Task {
         return status;
     }
 
+    public void setStatus(TaskStatus status) {
+        this.status = status;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return id == task.id && name.equals(task.name) && Objects.equals(desctiption, task.desctiption);
+        return id == task.id && name.equals(task.name) && Objects.equals(description, task.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, desctiption, id);
+        return Objects.hash(name, description, id);
     }
 }
 
