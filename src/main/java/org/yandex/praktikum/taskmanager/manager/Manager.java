@@ -30,6 +30,10 @@ public class Manager {
         epicMap.put(epic.getId(), epic);
     }
 
+    public void updateEpic(Epic epic){
+        epicMap.put(epic.getId(), epic);
+    }
+
     /**
      * @param subtask новая подзадача
      */
@@ -39,7 +43,7 @@ public class Manager {
 
     /**
      * Обновляет подзадачу и проверяет на завершенность эпика, которому эта подзадача принадлежит
-     * @param subtask
+     * @param subtask новая подзадача, взамен старой
      */
     public void updateSubtask(Subtask subtask) {
         boolean changeStatus = true;
@@ -59,7 +63,4 @@ public class Manager {
 
         subtaskMap.put(subtask.getId(), subtask);
     }
-
-
-
 }
