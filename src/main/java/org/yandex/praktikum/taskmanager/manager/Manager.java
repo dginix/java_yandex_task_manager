@@ -42,6 +42,21 @@ public class Manager {
      * @param subtask
      */
     public void updateSubtask(Subtask subtask) {
+        boolean changeStatus = true;
+        for (Subtask subtaskInEpic : subtask.getEpicOwned().getSubtaskList()) {
+            if (subtaskInEpic.getStatus() != TaskStatus.DONE) {
+                changeStatus = false;
+                break;
+            }
+        }
+
+        if (changeStatus) {
+            subtask.getEpicOwned().setStatus(TaskStatus.DONE);
+        }
+        else {
+            subtask.getEpicOwned().setStatus(TaskStatus.IN_PROGRESS);
+        }
+
         subtaskMap.put(subtask.getId(), subtask);
     }
 

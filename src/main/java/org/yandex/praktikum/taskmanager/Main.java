@@ -21,5 +21,13 @@ public class Main {
                 TaskStatus.NEW, epic1);
         epic1.addSubtask(subtask1);
         epic1.addSubtask(subtask2);
+
+        subtask1.setStatus(TaskStatus.DONE);
+        taskManager.updateSubtask(subtask1);
+
+        subtask2.setStatus(TaskStatus.DONE);
+        taskManager.updateSubtask(subtask1);
+
+        System.out.println("Done!");
     }
 }
