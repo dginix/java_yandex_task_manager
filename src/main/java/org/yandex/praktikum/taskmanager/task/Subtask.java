@@ -13,4 +13,15 @@ public class Subtask extends Task{
     public Epic getEpicOwned() {
         return epicOwned;
     }
+
+    @Override
+    public String toString() {
+        return "Subtask{" +
+                "epicOwned='" + epicOwned.name +'\''+
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", id=" + id +
+                ", status=" + status +
+                '}';
+    }
 }

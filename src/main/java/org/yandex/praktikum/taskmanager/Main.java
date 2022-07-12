@@ -22,6 +22,9 @@ public class Main {
         epic1.addSubtask(subtask1);
         epic1.addSubtask(subtask2);
 
+        taskManager.addEpic(epic1);
+        taskManager.addEpic(epic2);
+
         subtask1.setStatus(TaskStatus.DONE);
         taskManager.updateSubtask(subtask1);
 
@@ -29,5 +32,7 @@ public class Main {
         taskManager.updateSubtask(subtask1);
 
         System.out.println("Done!");
+
+        taskManager.getAllTasks();
     }
 }
