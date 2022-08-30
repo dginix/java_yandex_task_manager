@@ -18,4 +18,5 @@ public interface TaskManager {
     void getAllTasks();
     void deleteAllTasks();
     Task getTaskById(int id);
+    public void deleteTaskById(int id);
 }
