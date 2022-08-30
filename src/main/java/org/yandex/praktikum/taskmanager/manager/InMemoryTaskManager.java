@@ -8,12 +8,12 @@ import org.yandex.praktikum.taskmanager.task.TaskStatus;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Manager {
+public class InMemoryTaskManager implements TaskManager {
     private int idCount = 0;
 
-    private HashMap <Integer, Task> taskMap = new HashMap<>();
-    private HashMap <Integer, Epic> epicMap = new HashMap<>();
-    private HashMap <Integer, Subtask> subtaskMap = new HashMap<>();
+    private final HashMap <Integer, Task> taskMap = new HashMap<>();
+    private final HashMap <Integer, Epic> epicMap = new HashMap<>();
+    private final HashMap <Integer, Subtask> subtaskMap = new HashMap<>();
 
     public int getNewId(){
         return ++idCount;
