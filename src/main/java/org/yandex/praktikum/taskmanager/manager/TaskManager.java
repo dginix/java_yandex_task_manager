@@ -4,7 +4,7 @@ import org.yandex.praktikum.taskmanager.task.Epic;
 import org.yandex.praktikum.taskmanager.task.Subtask;
 import org.yandex.praktikum.taskmanager.task.Task;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface TaskManager {
     int getNewId();
@@ -23,7 +23,5 @@ public interface TaskManager {
 
     void getAllTasks();
     void deleteAllTasks();
-
-    void addToHistory(Task task);
-    ArrayList<Task> getHistory();
+    List<Task> getHistory();
 }

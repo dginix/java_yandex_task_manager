@@ -1,12 +1,13 @@
 package org.yandex.praktikum.taskmanager.manager;
 
+import org.yandex.praktikum.taskmanager.historymanager.HistoryManager;
 import org.yandex.praktikum.taskmanager.task.Epic;
 import org.yandex.praktikum.taskmanager.task.Subtask;
 import org.yandex.praktikum.taskmanager.task.Task;
 import org.yandex.praktikum.taskmanager.task.TaskStatus;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
@@ -15,7 +16,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap <Integer, Task> taskMap = new HashMap<>();
     private final HashMap <Integer, Epic> epicMap = new HashMap<>();
     private final HashMap <Integer, Subtask> subtaskMap = new HashMap<>();
-    private final ArrayList<Task> historyList = new ArrayList<>();
+    HistoryManager historyManager = Managers.getDefaultHistory();
     @Override
     public int getNewId(){
         return ++idCount;
@@ -38,7 +39,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Task getTaskById(int id) {
         Task result = taskMap.get(id);
         System.out.println(result);
-        addToHistory(result);
+        historyManager.add(result);
         return result;
     }
 
@@ -63,7 +64,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Epic getEpicById(int id){
         Epic result = epicMap.get(id);
         System.out.println(result);
-        addToHistory(result);
+        historyManager.add(result);
         return result;
     }
     @Override
@@ -97,7 +98,7 @@ public class InMemoryTaskManager implements TaskManager {
     public Subtask getSubtaskById(int id){
         Subtask result = subtaskMap.get(id);
         System.out.println(result);
-        addToHistory(result);
+        historyManager.add(result);
         return result;
     }
 
@@ -132,22 +133,7 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public void addToHistory(Task task){
-        if(historyList.size() >= 10){
-            historyList.remove(0);
-            historyList.add(task);
-        }
-        else{
-            historyList.add(task);
-        }
-    }
-
-    /**
-     *
-     * @return последние вызванные 10 задач
-     */
-    @Override
-    public ArrayList<Task> getHistory(){
-        return historyList;
+    public List<Task> getHistory(){
+        return historyManager.getHistory();
     }
 }
