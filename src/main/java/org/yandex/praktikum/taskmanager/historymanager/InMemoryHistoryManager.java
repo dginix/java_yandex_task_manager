@@ -18,6 +18,11 @@ public class InMemoryHistoryManager implements HistoryManager{
         }
     }
 
+    @Override
+    public void remove(int id){
+        historyList.remove(id);
+    }
+
     /**
      *
      * @return последние вызванные 10 задач
