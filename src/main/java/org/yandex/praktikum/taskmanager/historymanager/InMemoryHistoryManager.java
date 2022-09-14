@@ -28,7 +28,7 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void add(Task task) {
         // TODO не забыть добавить ограничение на 10 задач
         if (historyListFinder.containsKey(task.getId())) {
-            removeNode(task.getId());
+            remove(task.getId());
         }
         TaskNode<Task> addedTask = linkLast(task);
         historyListFinder.put(task.getId(), addedTask);
@@ -39,7 +39,7 @@ public class InMemoryHistoryManager implements HistoryManager {
      * @param id задачи для удаления из списка
      */
     @Override
-    public void removeNode(int id) {
+    public void remove(int id) {
         if (historyListFinder.containsKey(id) && historyListFinder.get(id) != null) {
             TaskNode<Task> removableNode = historyListFinder.get(id);
 

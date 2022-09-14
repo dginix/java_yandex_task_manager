@@ -42,6 +42,9 @@ public class Main {
         testManager.getTaskById(1);
         testManager.getEpicById(4);
         testManager.getTaskById(2);
+
+        testManager.deleteTaskById(2);
+
         System.out.println("История вызова задач: \n" + testManager.getHistory());
 
         System.out.println("Done!");

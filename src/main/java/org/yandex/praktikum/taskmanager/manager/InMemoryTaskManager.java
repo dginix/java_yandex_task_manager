@@ -51,6 +51,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteTaskById(int id){
         System.out.println("Удалена задача:\n" + taskMap.get(id));
         taskMap.remove(id);
+        historyManager.remove(id);
     }
     @Override
     public void addEpic(Epic epic) {
