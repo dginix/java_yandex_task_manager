@@ -1,6 +1,5 @@
 package org.yandex.praktikum.taskmanager;
 
-import org.yandex.praktikum.taskmanager.manager.InMemoryTaskManager;
 import org.yandex.praktikum.taskmanager.manager.Managers;
 import org.yandex.praktikum.taskmanager.manager.TaskManager;
 import org.yandex.praktikum.taskmanager.task.Epic;
@@ -37,15 +36,12 @@ public class Main {
         subtask2.setStatus(TaskStatus.DONE);
         testManager.updateSubtask(subtask1);
 
-        testManager.getAllTasks();
+        testManager.getAll();
 
         testManager.getTaskById(1);
         testManager.getEpicById(4);
         testManager.getTaskById(2);
 
-        testManager.deleteTaskById(2);
-
-        System.out.println("История вызова задач: \n" + testManager.getHistory());
 
         System.out.println("Done!");
     }

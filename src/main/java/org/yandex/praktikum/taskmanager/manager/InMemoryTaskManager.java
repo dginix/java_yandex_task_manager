@@ -4,8 +4,8 @@ import org.yandex.praktikum.taskmanager.historymanager.HistoryManager;
 import org.yandex.praktikum.taskmanager.task.Epic;
 import org.yandex.praktikum.taskmanager.task.Subtask;
 import org.yandex.praktikum.taskmanager.task.Task;
-import org.yandex.praktikum.taskmanager.task.TaskStatus;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +17,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final HashMap <Integer, Epic> epicMap = new HashMap<>();
     private final HashMap <Integer, Subtask> subtaskMap = new HashMap<>();
     HistoryManager historyManager = Managers.getDefaultHistory();
+
     @Override
     public int getNewId(){
         return ++idCount;
@@ -25,6 +26,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void addTask(Task task) {
         taskMap.put(task.getId(), task);
     }
+
     @Override
     public void updateTask(Task task) {
         taskMap.put(task.getId(), task);
@@ -53,14 +55,23 @@ public class InMemoryTaskManager implements TaskManager {
         taskMap.remove(id);
         historyManager.remove(id);
     }
+
+    @Override
+    public void deleteAllTask() {
+        System.out.println("Удаление всех задач");
+        taskMap.clear();
+    }
+
     @Override
     public void addEpic(Epic epic) {
         epicMap.put(epic.getId(), epic);
     }
+
     @Override
     public void updateEpic(Epic epic){
         epicMap.put(epic.getId(), epic);
     }
+
     @Override
     public Epic getEpicById(int id){
         Epic result = epicMap.get(id);
@@ -68,6 +79,28 @@ public class InMemoryTaskManager implements TaskManager {
         historyManager.add(result);
         return result;
     }
+
+    @Override
+    public void deleteEpicById(int id) {
+        //TODO при удалении эпика очищает все подзадачи
+        Epic deletedEpic = epicMap.get(id);
+        ArrayList<Subtask> deletedSubtasks = deletedEpic.getSubtaskList();
+
+        for(Subtask subtask : deletedSubtasks){
+            historyManager.remove(subtask.getId());
+            subtaskMap.remove(subtask.getId());
+        }
+
+        historyManager.remove(id);
+        epicMap.remove(id);
+    }
+
+    @Override
+    public void deleteAllEpic() {
+        epicMap.clear();
+        subtaskMap.clear();
+    }
+
     @Override
     public void addSubtask(Subtask subtask) {
         subtaskMap.put(subtask.getId(), subtask);
@@ -78,23 +111,10 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void updateSubtask(Subtask subtask) {
-        boolean changeStatus = true;
-        for (Subtask subtaskInEpic : subtask.getEpicOwned().getSubtaskList()) {
-            if (subtaskInEpic.getStatus() != TaskStatus.DONE) {
-                changeStatus = false;
-                break;
-            }
-        }
-
-        if (changeStatus) {
-            subtask.getEpicOwned().setStatus(TaskStatus.DONE);
-        }
-        else {
-            subtask.getEpicOwned().setStatus(TaskStatus.IN_PROGRESS);
-        }
-
         subtaskMap.put(subtask.getId(), subtask);
+        subtask.getEpicOwned().updateStatus();
     }
+
     @Override
     public Subtask getSubtaskById(int id){
         Subtask result = subtaskMap.get(id);
@@ -103,11 +123,20 @@ public class InMemoryTaskManager implements TaskManager {
         return result;
     }
 
+    @Override
+    public void deleteSubtaskById(int id){
+        Subtask deletedSubtask = subtaskMap.get(id);
+        Epic fromEpic = deletedSubtask.getEpicOwned();
+        fromEpic.getSubtaskList().remove(id);
+        subtaskMap.remove(id);
+        fromEpic.updateStatus();
+    }
+
     /**
      * Выводит список всех задач, подзадач и эпиков
      */
     @Override
-    public void getAllTasks() {
+    public void getAll() {
         System.out.println("Список всех задач:");
         for(Map.Entry<Integer, Task> entry : taskMap.entrySet()){
             System.out.println(entry.getValue());
@@ -126,7 +155,7 @@ public class InMemoryTaskManager implements TaskManager {
      * Очищает все списки задач, подзадач и эпиков
      */
     @Override
-    public void deleteAllTasks() {
+    public void deleteAll() {
         System.out.println("Удаление всех задач");
         taskMap.clear();
         subtaskMap.clear();
