@@ -17,18 +17,19 @@ public class Main {
         testManager.addTask(new Task("задача 2", "что-то там", testManager.getNewId(), TaskStatus.NEW));
 
         Epic epic1 = new Epic("эпик 1", "бла бла бла", testManager.getNewId(), TaskStatus.NEW);
-        Epic epic2 = new Epic("эпик 2", "бла бла бла", testManager.getNewId(), TaskStatus.NEW);
 
         Subtask subtask1 = new Subtask("подзадача 1", "бла бла бла", testManager.getNewId(),
                 TaskStatus.NEW, epic1);
         Subtask subtask2 = new Subtask("подзадача 2", "бла бла бла", testManager.getNewId(),
                 TaskStatus.NEW, epic1);
 
+        testManager.addSubtask(subtask1);
+        testManager.addSubtask(subtask2);
+
         epic1.addSubtask(subtask1);
         epic1.addSubtask(subtask2);
 
         testManager.addEpic(epic1);
-        testManager.addEpic(epic2);
 
         subtask1.setStatus(TaskStatus.DONE);
         testManager.updateSubtask(subtask1);
@@ -36,13 +37,24 @@ public class Main {
         subtask2.setStatus(TaskStatus.DONE);
         testManager.updateSubtask(subtask1);
 
+        System.out.println("\n============== Все задачи ============");
         testManager.getAll();
 
+        System.out.println("\n======== Поштучно получаем задачи ========");
         testManager.getTaskById(1);
-        testManager.getEpicById(4);
+        testManager.getEpicById(3);
+        testManager.getSubtaskById(4);
+        testManager.getSubtaskById(5);
         testManager.getTaskById(2);
 
 
-        System.out.println("Done!");
+        System.out.println("\n======== Получение истории вызова задач ========");
+        System.out.println(testManager.getHistory());
+
+        testManager.deleteSubtaskById(4);
+        System.out.println("\n======== Получение истории после удаления ========");
+        System.out.println(testManager.getHistory());
+
+        System.out.println("\nDone!");
     }
 }

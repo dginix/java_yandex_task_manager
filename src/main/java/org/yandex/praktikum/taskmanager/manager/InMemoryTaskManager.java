@@ -51,15 +51,15 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void deleteTaskById(int id){
-        System.out.println("Удалена задача:\n" + taskMap.get(id));
         taskMap.remove(id);
         historyManager.remove(id);
     }
 
     @Override
     public void deleteAllTask() {
-        System.out.println("Удаление всех задач");
-        taskMap.clear();
+        for(Integer id : taskMap.keySet()){
+            deleteTaskById(id);
+        }
     }
 
     @Override
@@ -82,13 +82,14 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteEpicById(int id) {
-        //TODO при удалении эпика очищает все подзадачи
         Epic deletedEpic = epicMap.get(id);
         ArrayList<Subtask> deletedSubtasks = deletedEpic.getSubtaskList();
 
-        for(Subtask subtask : deletedSubtasks){
-            historyManager.remove(subtask.getId());
-            subtaskMap.remove(subtask.getId());
+        if(deletedSubtasks != null){
+            for(Subtask subtask : deletedSubtasks){
+                historyManager.remove(subtask.getId());
+                subtaskMap.remove(subtask.getId());
+            }
         }
 
         historyManager.remove(id);
@@ -97,8 +98,9 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpic() {
-        epicMap.clear();
-        subtaskMap.clear();
+        for(Integer id : epicMap.keySet()){
+            deleteEpicById(id);
+        }
     }
 
     @Override
@@ -127,8 +129,11 @@ public class InMemoryTaskManager implements TaskManager {
     public void deleteSubtaskById(int id){
         Subtask deletedSubtask = subtaskMap.get(id);
         Epic fromEpic = deletedSubtask.getEpicOwned();
-        fromEpic.getSubtaskList().remove(id);
+        fromEpic.getSubtaskList().remove(deletedSubtask);
+
+        historyManager.remove(id);
         subtaskMap.remove(id);
+
         fromEpic.updateStatus();
     }
 
@@ -141,10 +146,12 @@ public class InMemoryTaskManager implements TaskManager {
         for(Map.Entry<Integer, Task> entry : taskMap.entrySet()){
             System.out.println(entry.getValue());
         }
+
         System.out.println("Список всех эпиков:");
         for(Map.Entry<Integer, Epic> entry : epicMap.entrySet()){
             System.out.println(entry.getValue());
         }
+
         System.out.println("Список всех подазадач:");
         for(Map.Entry<Integer, Subtask> entry : subtaskMap.entrySet()){
             System.out.println(entry.getValue());
