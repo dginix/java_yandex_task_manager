@@ -114,7 +114,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void updateSubtask(Subtask subtask) {
         subtaskMap.put(subtask.getId(), subtask);
-        subtask.getEpicOwned().updateStatus();
+        epicMap.get(subtask.getEpicId()).updateStatus();
     }
 
     @Override
@@ -128,7 +128,7 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public void deleteSubtaskById(int id){
         Subtask deletedSubtask = subtaskMap.get(id);
-        Epic fromEpic = deletedSubtask.getEpicOwned();
+        Epic fromEpic = epicMap.get(deletedSubtask.getEpicId());
         fromEpic.getSubtaskList().remove(deletedSubtask);
 
         historyManager.remove(id);

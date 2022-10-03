@@ -4,18 +4,19 @@ public class Subtask extends Task{
     /**
      * Значение Id эпика, которому принадлежит подзадача
      */
-    private Epic epicOwned;
-    public Subtask(String name, String description, int id, TaskStatus status, TaskType type, Epic epicOwned) {
-        super(name, description, id, status, type);
-        this.epicOwned = epicOwned;
-    }
+    protected int epicId;
 
-    public Epic getEpicOwned() {
-        return epicOwned;
+    public Subtask(String name, String description, int id, TaskStatus status, TaskType type, int epicId) {
+        super(name, description, id, status, type);
+        this.epicId = epicId;
+}
+
+    public int getEpicId() {
+        return epicId;
     }
 
     @Override
     public String toString() {
-        return super.toString() + this.epicOwned.id;
+        return super.toString() + this.epicId;
     }
 }

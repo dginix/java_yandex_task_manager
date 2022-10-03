@@ -19,9 +19,9 @@ public class Main {
                 TaskType.EPIC);
 
         Subtask subtask1 = new Subtask("подзадача 1", "бла бла бла", testManager.getNewId(),
-                TaskStatus.NEW, TaskType.SUBTASK, epic1);
+                TaskStatus.NEW, TaskType.SUBTASK, epic1.getId());
         Subtask subtask2 = new Subtask("подзадача 2", "бла бла бла", testManager.getNewId(),
-                TaskStatus.NEW, TaskType.SUBTASK, epic1);
+                TaskStatus.NEW, TaskType.SUBTASK, epic1.getId());
 
         testManager.addSubtask(subtask1);
         testManager.addSubtask(subtask2);
