@@ -2,10 +2,7 @@ package org.yandex.praktikum.taskmanager;
 
 import org.yandex.praktikum.taskmanager.manager.Managers;
 import org.yandex.praktikum.taskmanager.manager.TaskManager;
-import org.yandex.praktikum.taskmanager.task.Epic;
-import org.yandex.praktikum.taskmanager.task.Subtask;
-import org.yandex.praktikum.taskmanager.task.Task;
-import org.yandex.praktikum.taskmanager.task.TaskStatus;
+import org.yandex.praktikum.taskmanager.task.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -13,15 +10,18 @@ public class Main {
 
         TaskManager testManager = managers.getDefault();
 
-        testManager.addTask(new Task("задача 1", "что-то там", testManager.getNewId(), TaskStatus.NEW));
-        testManager.addTask(new Task("задача 2", "что-то там", testManager.getNewId(), TaskStatus.NEW));
+        testManager.addTask(new Task("задача 1", "что-то там", testManager.getNewId(), TaskStatus.NEW,
+                TaskType.TASK));
+        testManager.addTask(new Task("задача 2", "что-то там", testManager.getNewId(), TaskStatus.NEW,
+                TaskType.TASK));
 
-        Epic epic1 = new Epic("эпик 1", "бла бла бла", testManager.getNewId(), TaskStatus.NEW);
+        Epic epic1 = new Epic("эпик 1", "бла бла бла", testManager.getNewId(), TaskStatus.NEW,
+                TaskType.EPIC);
 
         Subtask subtask1 = new Subtask("подзадача 1", "бла бла бла", testManager.getNewId(),
-                TaskStatus.NEW, epic1);
+                TaskStatus.NEW, TaskType.SUBTASK, epic1);
         Subtask subtask2 = new Subtask("подзадача 2", "бла бла бла", testManager.getNewId(),
-                TaskStatus.NEW, epic1);
+                TaskStatus.NEW, TaskType.SUBTASK, epic1);
 
         testManager.addSubtask(subtask1);
         testManager.addSubtask(subtask2);

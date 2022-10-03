@@ -6,8 +6,8 @@ import java.util.HashMap;
 public class Epic extends Task{
     final private ArrayList<Subtask> subtaskList = new ArrayList<>();
 
-    public Epic(String name, String description, int id, TaskStatus status) {
-        super(name, description, id, status);
+    public Epic(String name, String description, int id, TaskStatus status, TaskType type) {
+        super(name, description, id, status, type);
     }
 
     public void addSubtask(Subtask subtask){
@@ -24,12 +24,7 @@ public class Epic extends Task{
 
     @Override
     public String toString() {
-        return "Epic{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                '}';
+        return super.toString();
     }
 
     /**
