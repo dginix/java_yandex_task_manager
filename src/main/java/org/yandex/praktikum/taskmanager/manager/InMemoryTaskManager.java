@@ -11,12 +11,20 @@ import java.util.List;
 import java.util.Map;
 
 public class InMemoryTaskManager implements TaskManager {
-    private int idCount = 0;
+    private int idCount;
 
-    private final HashMap <Integer, Task> taskMap = new HashMap<>();
-    private final HashMap <Integer, Epic> epicMap = new HashMap<>();
-    private final HashMap <Integer, Subtask> subtaskMap = new HashMap<>();
-    HistoryManager historyManager = Managers.getDefaultHistory();
+    protected final HashMap <Integer, Task> taskMap;
+    protected final HashMap <Integer, Epic> epicMap;
+    protected final HashMap <Integer, Subtask> subtaskMap;
+    protected final HistoryManager historyManager;
+
+    public InMemoryTaskManager() {
+        this.idCount = 0;
+        this.historyManager = Managers.getDefaultHistory();
+        this.subtaskMap = new HashMap<>();
+        this.epicMap = new HashMap<>();
+        this.taskMap = new HashMap<>();
+    }
 
     @Override
     public int getNewId(){

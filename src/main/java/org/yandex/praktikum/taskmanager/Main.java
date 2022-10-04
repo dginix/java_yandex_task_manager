@@ -1,11 +1,16 @@
 package org.yandex.praktikum.taskmanager;
 
+import org.yandex.praktikum.taskmanager.manager.FileBackedManager;
 import org.yandex.praktikum.taskmanager.manager.Managers;
 import org.yandex.praktikum.taskmanager.manager.TaskManager;
 import org.yandex.praktikum.taskmanager.task.*;
 
 public class Main {
     public static void main(String[] args) {
+        //testInMemoryManager();
+        testFileBackedManager();
+    }
+    public static void testInMemoryManager() {
         Managers managers = new Managers();
 
         TaskManager testManager = managers.getDefault();
@@ -56,5 +61,22 @@ public class Main {
         System.out.println(testManager.getHistory());
 
         System.out.println("\nDone!");
+    }
+    public static void testFileBackedManager() {
+        FileBackedManager manager = new FileBackedManager();
+
+        Task task1 = new Task("Task 1", "descr1", manager.getNewId(), TaskStatus.NEW,
+                TaskType.TASK);
+        Epic epic1 = new Epic("Epic 1", "descr 2", manager.getNewId(), TaskStatus.NEW,
+                TaskType.EPIC);
+
+        Subtask subtask1 = new Subtask("Subtask 1", "descr 3", manager.getNewId(), TaskStatus.NEW, TaskType.SUBTASK,
+                epic1.getId());
+
+        manager.addTask(task1);
+        manager.addEpic(epic1);
+        manager.addSubtask(subtask1);
+
+        manager.save();
     }
 }
