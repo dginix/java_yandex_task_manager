@@ -1,10 +1,10 @@
 package org.yandex.praktikum.taskmanager.manager;
 
+import org.yandex.praktikum.taskmanager.models.exceptions.ManagerSaveException;
 import org.yandex.praktikum.taskmanager.task.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Map;
 
 public class FileBackedManager extends InMemoryTaskManager {
@@ -42,8 +42,8 @@ public class FileBackedManager extends InMemoryTaskManager {
                 writer.write("\n");
             }
         }
-        catch (IOException e) {
-            e.getStackTrace();
+        catch (Exception e) {
+            throw new ManagerSaveException(e.getMessage());
         }
     }
 
