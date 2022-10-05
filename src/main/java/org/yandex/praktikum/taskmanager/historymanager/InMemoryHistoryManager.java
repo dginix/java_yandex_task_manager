@@ -101,4 +101,9 @@ public class InMemoryHistoryManager implements HistoryManager {
         historyListSize++;
         return newTailTask;
     }
+
+    @Override
+    public boolean isEmpty() {
+        return historyListFinder.isEmpty();
+    }
 }

@@ -1,14 +1,17 @@
 package org.yandex.praktikum.taskmanager;
 
-import org.yandex.praktikum.taskmanager.manager.FileBackedManager;
+import org.yandex.praktikum.taskmanager.manager.FileBackedTaskManager;
 import org.yandex.praktikum.taskmanager.manager.Managers;
 import org.yandex.praktikum.taskmanager.manager.TaskManager;
 import org.yandex.praktikum.taskmanager.task.*;
 
+import java.io.File;
+
 public class Main {
     public static void main(String[] args) {
         //testInMemoryManager();
-        testFileBackedManager();
+        //testFileBackedManager();
+        testLoadFile();
     }
     public static void testInMemoryManager() {
         Managers managers = new Managers();
@@ -63,7 +66,7 @@ public class Main {
         System.out.println("\nDone!");
     }
     public static void testFileBackedManager() {
-        FileBackedManager manager = new FileBackedManager();
+        FileBackedTaskManager manager = new FileBackedTaskManager();
 
         Task task1 = new Task("Task 1", "descr1", manager.getNewId(), TaskStatus.NEW,
                 TaskType.TASK);
@@ -78,5 +81,16 @@ public class Main {
         manager.addSubtask(subtask1);
 
         manager.save();
+    }
+
+    public static void testLoadFile() {
+
+        File file = new File("/home/kruchinin/IdeaProjects/java_yandex_task_manager/src/main/resources" +
+                "/state_saver/data.csv");
+
+        FileBackedTaskManager manager = FileBackedTaskManager.loadFromFile(file);
+
+        manager.getAll();
+        System.out.println(manager.getHistory());
     }
 }
