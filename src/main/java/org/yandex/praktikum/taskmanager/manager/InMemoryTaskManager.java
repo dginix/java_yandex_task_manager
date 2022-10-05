@@ -150,19 +150,25 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void getAll() {
-        System.out.println("Список всех задач:");
-        for(Map.Entry<Integer, Task> entry : taskMap.entrySet()){
-            System.out.println(entry.getValue());
+        if (!taskMap.isEmpty()) {
+            System.out.println("Список всех задач:");
+            for(Map.Entry<Integer, Task> entry : taskMap.entrySet()){
+                System.out.println(entry.getValue());
+            }
         }
 
-        System.out.println("Список всех эпиков:");
-        for(Map.Entry<Integer, Epic> entry : epicMap.entrySet()){
-            System.out.println(entry.getValue());
+        if (!epicMap.isEmpty()) {
+            System.out.println("Список всех эпиков:");
+            for(Map.Entry<Integer, Epic> entry : epicMap.entrySet()){
+                System.out.println(entry.getValue());
+            }
         }
 
-        System.out.println("Список всех подазадач:");
-        for(Map.Entry<Integer, Subtask> entry : subtaskMap.entrySet()){
-            System.out.println(entry.getValue());
+        if (!subtaskMap.isEmpty()) {
+            System.out.println("Список всех подазадач:");
+            for(Map.Entry<Integer, Subtask> entry : subtaskMap.entrySet()){
+                System.out.println(entry.getValue());
+            }
         }
     }
 
