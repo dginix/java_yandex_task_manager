@@ -143,4 +143,67 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         }
         return result.toString();
     }
+
+    public void addTask(Task task) {
+        super.addTask(task);
+        save();
+    }
+
+    public void updateTask(Task task) {
+        super.updateTask(task);
+        save();
+    }
+    public Task getTaskById(int id) {
+        Task result = super.getTaskById(id);
+        save();
+        return result;
+    }
+    public void deleteTaskById(int id) {
+        super.deleteTaskById(id);
+        save();
+    }
+    public void deleteAllTask() {
+        super.deleteAllTask();
+        save();
+    }
+
+    public void addEpic(Epic epic) {
+        super.addEpic(epic);
+        save();
+    }
+    public void updateEpic(Epic epic) {
+        super.updateEpic(epic);
+        save();
+    }
+    public Epic getEpicById(int id) {
+        Epic result = super.getEpicById(id);
+        save();
+        return result;
+    }
+    public void deleteEpicById(int id) {
+        super.deleteEpicById(id);
+        save();
+    }
+    public void deleteAllEpic() {
+        super.deleteAllEpic();
+        save();
+    }
+
+    public void addSubtask(Subtask subtask) {
+        super.addSubtask(subtask);
+        save();
+    }
+    public void updateSubtask(Subtask subtask) {
+        super.updateSubtask(subtask);
+        save();
+    }
+    public Subtask getSubtaskById(int id) {
+        Subtask result = super.getSubtaskById(id);
+        save();
+        return result;
+    }
+    public void deleteSubtaskById(int id) {
+        super.deleteSubtaskById(id);
+        save();
+    }
 }
