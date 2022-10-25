@@ -4,10 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yandex.praktikum.taskmanager.task.*;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 abstract class TaskManagerTest<T extends TaskManager> {
-
     public T taskManager;
 
     public Task task1;
@@ -18,6 +19,8 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     public Subtask subtask1;
     public Subtask subtask2;
+    public Subtask subtask3;
+    public Subtask subtask4;
 
     abstract public void createNewManager();
 
@@ -33,14 +36,21 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         subtask1 = new Subtask("Subtask1", "1", taskManager.getNewId(), TaskStatus.NEW,
                 TaskType.SUBTASK, epic1.getId());
+
         subtask2 = new Subtask("Subtask2", "2", taskManager.getNewId(), TaskStatus.NEW,
                 TaskType.SUBTASK, epic1.getId());
+
+        subtask3 = new Subtask("Subtask3", "3", taskManager.getNewId(), TaskStatus.NEW,
+                TaskType.SUBTASK, epic2.getId());
+
+        subtask4 = new Subtask("Subtask4", "4", taskManager.getNewId(), TaskStatus.NEW,
+                TaskType.SUBTASK, epic2.getId());
     }
 
     @Test
     public void getIdTest() {
         int count = taskManager.getNewId();
-        assertEquals(count+1, taskManager.getNewId(), "Менеджер не сгенерировал id");
+        assertEquals(count + 1, taskManager.getNewId(), "Менеджер не сгенерировал id");
     }
 
     @Test
@@ -103,17 +113,86 @@ abstract class TaskManagerTest<T extends TaskManager> {
         assertTrue(taskManager.getAllTasks().isEmpty(), "Список должен быть пуст");
     }
 
+    @Test
+    void addEpicTest() {
+        taskManager.addEpic(null);
+        assertTrue(taskManager.getAllEpics().isEmpty(), "Список эпиков должен быть пустой");
+        taskManager.addEpic(epic1);
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
 
-//    void addEpic(Epic epic);
-//    void updateEpic(Epic epic);
-//    Epic getEpicById(int id);
-//    void deleteEpicById(int id);
-//    void deleteAllEpic();
+        taskManager.addEpic(epic2);
+        taskManager.addSubtask(subtask3);
+        taskManager.addSubtask(subtask4);
+
+        assertFalse(taskManager.getAllEpics().isEmpty(), "Список эпиков не должен быть пустой");
+    }
+
+    @Test
+    void updateEpicTest() {
+        taskManager.addEpic(epic1);
+        Epic updateEpic1 = new Epic("Update Epic1", "1", epic1.getId(), TaskStatus.NEW, TaskType.EPIC);
+        taskManager.updateEpic(updateEpic1);
+        assertEquals(taskManager.getEpicById(epic1.getId()), updateEpic1,
+                "Эпики должны быть разные с тем же id");
+
+        Epic againUpdateEpic1 = new Epic("Again Update Epic1", "1", taskManager.getNewId(),
+                TaskStatus.NEW, TaskType.EPIC);
+
+        taskManager.updateEpic(againUpdateEpic1);
+        assertNull(taskManager.getTaskById(againUpdateEpic1.getId()),
+                "Не должно добавить или обновить эпик с несуществующим id");
+    }
+
+    @Test
+    void getEpicByIdTest() {
+        assertNull(taskManager.getEpicById(1), "Добавленых эпиков быть не должно");
+
+        taskManager.addEpic(epic1);
+        taskManager.addEpic(epic2);
+
+        assertEquals(taskManager.getEpicById(epic1.getId()), epic1,
+                "Не вернул ранее добавленный эпик по тому же id");
+    }
+
+    @Test
+    void deleteEpicByIdTest() {
+        taskManager.deleteEpicById(1);
+        assertTrue(taskManager.getAllEpics().isEmpty(), "Список должен быть пуст");
+
+        taskManager.addEpic(epic1);
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+
+        taskManager.addEpic(epic2);
+        taskManager.addSubtask(subtask3);
+        taskManager.addSubtask(subtask4);
+
+        taskManager.deleteEpicById(epic1.getId());
+        assertEquals(taskManager.getAllEpics().get(0), epic2, "В списке должен остаться только один эпик");
+
+        List<Subtask> subtasks = epic1.getSubtaskList();
+        assertFalse(taskManager.getAllSubtasks().contains(subtasks), "Связанные подзадачи должны быть удалены");
+    }
+
+    @Test
+    void deleteAllEpicTest() {
+        taskManager.addEpic(epic1);
+        taskManager.addSubtask(subtask1);
+        taskManager.addSubtask(subtask2);
+
+        taskManager.addEpic(epic2);
+        taskManager.addSubtask(subtask3);
+        taskManager.addSubtask(subtask4);
+
+        taskManager.deleteAllEpic();
+        assertTrue(taskManager.getAllEpics().isEmpty(), "Список всез эпиков должен быть пуст");
+        assertTrue(taskManager.getAllSubtasks().isEmpty(), "Список всех связанных подзадач должен быть пуст");
+    }
+
 //
 //    void addSubtask(Subtask subtask);
 //    void updateSubtask(Subtask subtask);
 //    Subtask getSubtaskById(int id);
 //    void deleteSubtaskById(int id);
-
-
 }
