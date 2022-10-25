@@ -5,10 +5,7 @@ import org.yandex.praktikum.taskmanager.task.Epic;
 import org.yandex.praktikum.taskmanager.task.Subtask;
 import org.yandex.praktikum.taskmanager.task.Task;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
     private int idCount;
@@ -32,12 +29,16 @@ public class InMemoryTaskManager implements TaskManager {
     }
     @Override
     public void addTask(Task task) {
-        taskMap.put(task.getId(), task);
+        if(task != null) {
+            taskMap.put(task.getId(), task);
+        }
     }
 
     @Override
     public void updateTask(Task task) {
-        taskMap.put(task.getId(), task);
+        if(task != null && taskMap.containsKey(task.getId())) {
+            taskMap.put(task.getId(), task);
+        }
     }
 
     /**
@@ -45,11 +46,24 @@ public class InMemoryTaskManager implements TaskManager {
      * @param id идентификатор задач
      * @return объект задачи из сохраняемого списка задач
      */
-    @Override
     public Task getTaskById(int id) {
         Task result = taskMap.get(id);
-        System.out.println(result);
         historyManager.add(result);
+        return result;
+    }
+
+    /**
+     * Возвращает список всех задач в менеджере
+     * @return список задач
+     */
+    @Override
+    public List<Task> getAllTasks() {
+        List<Task> result = new ArrayList<>();
+        if (!taskMap.isEmpty()) {
+            for(Map.Entry<Integer, Task> entry : taskMap.entrySet()){
+                result.add(entry.getValue());
+            }
+        }
         return result;
     }
 
@@ -65,26 +79,46 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllTask() {
-        for(Integer id : taskMap.keySet()){
-            deleteTaskById(id);
+        List<Task> tasks = getAllTasks();
+        for (Task task : tasks) {
+            deleteTaskById(task.getId());
+        }
+    }
+
+
+    @Override
+    public void addEpic(Epic epic) {
+        if(epic != null) {
+            epicMap.put(epic.getId(), epic);
         }
     }
 
     @Override
-    public void addEpic(Epic epic) {
-        epicMap.put(epic.getId(), epic);
-    }
-
-    @Override
-    public void updateEpic(Epic epic){
-        epicMap.put(epic.getId(), epic);
+    public void updateEpic(Epic epic) {
+        if(epic != null && epicMap.containsKey(epic.getId())) {
+            epicMap.put(epic.getId(), epic);
+        }
     }
 
     @Override
     public Epic getEpicById(int id){
         Epic result = epicMap.get(id);
-        System.out.println(result);
         historyManager.add(result);
+        return result;
+    }
+
+    /**
+     * Возвращает список всех эпиков в менеджере
+     * @return список эпиков
+     */
+    @Override
+    public List<Epic> getAllEpics() {
+        List<Epic> result = new ArrayList<>();
+        if (!epicMap.isEmpty()) {
+            for(Map.Entry<Integer, Epic> entry : epicMap.entrySet()){
+                result.add(entry.getValue());
+            }
+        }
         return result;
     }
 
@@ -106,16 +140,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void deleteAllEpic() {
-        for(Integer id : epicMap.keySet()){
-            deleteEpicById(id);
+        List<Epic> epics = getAllEpics();
+        for (Epic epic : epics) {
+            deleteEpicById(epic.getId());
         }
     }
 
     @Override
     public void addSubtask(Subtask subtask) {
-        subtaskMap.put(subtask.getId(), subtask);
-        epicMap.get(subtask.getEpicId()).addSubtask(subtask);
-        epicMap.get(subtask.getEpicId()).updateStatus();
+        if(subtask != null) {
+            subtaskMap.put(subtask.getId(), subtask);
+            epicMap.get(subtask.getEpicId()).addSubtask(subtask);
+            epicMap.get(subtask.getEpicId()).updateStatus();
+        }
     }
 
     /**
@@ -123,15 +160,31 @@ public class InMemoryTaskManager implements TaskManager {
      */
     @Override
     public void updateSubtask(Subtask subtask) {
-        subtaskMap.put(subtask.getId(), subtask);
-        epicMap.get(subtask.getEpicId()).updateStatus();
+        if(subtask != null && subtaskMap.containsKey(subtask.getId())) {
+            subtaskMap.put(subtask.getId(), subtask);
+            epicMap.get(subtask.getEpicId()).updateStatus();
+        }
     }
 
     @Override
     public Subtask getSubtaskById(int id){
         Subtask result = subtaskMap.get(id);
-        System.out.println(result);
         historyManager.add(result);
+        return result;
+    }
+
+    /**
+     * Возвращает список всех подзадач в менеджере
+     * @return список подзадач
+     */
+    @Override
+    public List<Subtask> getAllSubtasks() {
+        List<Subtask> result = new ArrayList<>();
+        if (!subtaskMap.isEmpty()) {
+            for(Map.Entry<Integer, Subtask> entry : subtaskMap.entrySet()){
+                result.add(entry.getValue());
+            }
+        }
         return result;
     }
 

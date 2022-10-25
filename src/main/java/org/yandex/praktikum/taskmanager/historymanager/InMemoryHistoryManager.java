@@ -26,12 +26,14 @@ public class InMemoryHistoryManager implements HistoryManager {
      */
     @Override
     public void add(Task task) {
-        // TODO не забыть добавить ограничение на 10 задач
-        if (historyListFinder.containsKey(task.getId())) {
-            remove(task.getId());
+        if(task != null) {
+            // TODO не забыть добавить ограничение на 10 задач
+            if (historyListFinder.containsKey(task.getId())) {
+                remove(task.getId());
+            }
+            TaskNode<Task> addedTask = linkLast(task);
+            historyListFinder.put(task.getId(), addedTask);
         }
-        TaskNode<Task> addedTask = linkLast(task);
-        historyListFinder.put(task.getId(), addedTask);
     }
 
     /**
