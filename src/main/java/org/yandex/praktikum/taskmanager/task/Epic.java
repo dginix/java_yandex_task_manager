@@ -1,5 +1,6 @@
 package org.yandex.praktikum.taskmanager.task;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -20,6 +21,26 @@ public class Epic extends Task{
 
     public ArrayList<Subtask> getSubtaskList() {
         return subtaskList;
+    }
+
+    @Override
+    public LocalDateTime getStartTime() {
+        if (subtaskList.isEmpty()) {
+            return null;
+        }
+
+        LocalDateTime findStartTime = null;
+        for (Subtask subtask : subtaskList) {
+            if (subtask.getStartTime() == null) {
+                continue;
+            }
+
+            if (subtask.getStartTime() != null && LocalDateTime.MAX.isAfter(subtask.getStartTime())) {
+                findStartTime = subtask.getStartTime();
+            }
+        }
+
+        return findStartTime;
     }
 
     @Override
@@ -46,13 +67,13 @@ public class Epic extends Task{
         }
 
         if (statusCount.get(TaskStatus.DONE) == subtaskList.size()) {
-            this.status = TaskStatus.DONE;
+            this.setStatus(TaskStatus.DONE);
         }
         else if (statusCount.get(TaskStatus.NEW) == subtaskList.size()) {
-            this.status = TaskStatus.NEW;
+            this.setStatus(TaskStatus.NEW);
         }
         else {
-            this.status = TaskStatus.IN_PROGRESS;
+            this.setStatus(TaskStatus.IN_PROGRESS);
         }
     }
 }
