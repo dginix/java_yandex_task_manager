@@ -2,6 +2,7 @@ package org.yandex.praktikum.taskmanager.task;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Task {
@@ -56,7 +57,7 @@ public class Task {
         return startTime;
     }
     public LocalDateTime getEndTime() {
-        if (startTime == null) {
+        if (startTime == null && duration == null) {
             return null;
         }
         return startTime.plus(duration);
@@ -85,8 +86,17 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.format("%d,%s,%s,%s,%s,", this.id, this.type.name(), this.name, this.status.name(),
-                this.description);
+        String startTimeString = "";
+        String durationString = "";
+
+        if (startTime != null && duration != null) {
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+            startTimeString = startTime.format(formatter);
+            durationString = duration.toString();
+        }
+
+        return String.format("%d,%s,%s,%s,%s,%s,%s,", this.id, this.type.name(), this.name, this.status.name(),
+                this.description, startTimeString, durationString);
     }
 
     /**
