@@ -201,6 +201,14 @@ public class InMemoryTaskManager implements TaskManager {
         fromEpic.updateStatus();
     }
 
+    @Override
+    public void deleteAllSubtask() {
+        List<Subtask> subtasks = getAllSubtasks();
+        for (Subtask subtask : subtasks) {
+            deleteSubtaskById(subtask.getId());
+        }
+    }
+
     /**
      * Выводит список всех задач, подзадач и эпиков
      */
