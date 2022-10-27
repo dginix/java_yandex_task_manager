@@ -7,7 +7,7 @@ public class Subtask extends Task{
     /**
      * Значение Id эпика, которому принадлежит подзадача
      */
-    protected int epicId;
+    private int epicId;
 
     public Subtask(String name, String description, int id, TaskStatus status, TaskType type, LocalDateTime startTime,
                    Duration duration, int epicId) {
@@ -22,6 +22,10 @@ public class Subtask extends Task{
 
     public int getEpicId() {
         return epicId;
+    }
+
+    public void setEpicId(int epicId) {
+        this.epicId = epicId;
     }
 
     @Override
