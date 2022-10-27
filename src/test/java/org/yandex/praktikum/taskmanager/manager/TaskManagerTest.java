@@ -4,7 +4,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.yandex.praktikum.taskmanager.task.*;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Iterator;
 import java.util.List;
+import java.util.TreeSet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,6 +17,7 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
     public Task task1;
     public Task task2;
+    public Task task3;
 
     public Epic epic1;
     public Epic epic2;
@@ -27,9 +32,16 @@ abstract class TaskManagerTest<T extends TaskManager> {
     @BeforeEach
     public void beforeEach() {
         createNewManager();
+        LocalDateTime task1DateTime = LocalDateTime.of(2022,11,27,15,53);
+        LocalDateTime task2DateTime = LocalDateTime.of(2022,11,27,12,2);
+        Duration task1Duration = Duration.ofHours(10);
+        Duration task2Duration = Duration.ofHours(2);
 
-        task1 = new Task("Task1", "1", taskManager.getNewId(), TaskStatus.NEW, TaskType.TASK);
-        task2 = new Task("Task2", "2", taskManager.getNewId(), TaskStatus.NEW, TaskType.TASK);
+        task1 = new Task("Task1", "1", taskManager.getNewId(), TaskStatus.NEW, TaskType.TASK,
+                task1DateTime, task1Duration);
+        task2 = new Task("Task2", "2", taskManager.getNewId(), TaskStatus.NEW, TaskType.TASK,
+                task2DateTime, task2Duration);
+        task3 = new Task("Task3", "3", taskManager.getNewId(), TaskStatus.NEW, TaskType.TASK);
 
         epic1 = new Epic("Epic1", "1", taskManager.getNewId(), TaskStatus.NEW, TaskType.EPIC);
         epic2 = new Epic("Epic2", "2", taskManager.getNewId(), TaskStatus.NEW, TaskType.EPIC);
@@ -282,5 +294,40 @@ abstract class TaskManagerTest<T extends TaskManager> {
 
         taskManager.deleteAllSubtask();
         assertTrue(taskManager.getAllSubtasks().isEmpty(), "Список всех связанных подзадач должен быть пуст");
+    }
+
+    @Test
+    void getPrioritizedTasks_CheckSortingTest() {
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        taskManager.addTask(task3);
+        TreeSet<Task> result = taskManager.getPrioritizedTasks();
+        Iterator<Task> it = result.iterator();
+        assertEquals(task2, it.next(), "Задачи не отсортированы");
+        assertEquals(task1, it.next(), "Задачи не отсортированы");
+        assertEquals(task3, it.next(), "Задачи не отсортированы");
+    }
+    @Test
+    void getPrioritizedTasks_CheckIntersectionTest() {
+        task2.setDuration(Duration.ofHours(5));
+        epic1 = new Epic("Epic2", "2", taskManager.getNewId(), TaskStatus.NEW, TaskType.EPIC);
+
+        subtask1 = new Subtask("Subtask1", "1", taskManager.getNewId(), TaskStatus.NEW,
+                TaskType.SUBTASK, LocalDateTime.of(2022, 11, 29, 18, 5),
+                Duration.ofHours(4), epic1.getId());
+
+        epic1.addSubtask(subtask1);
+
+        taskManager.addTask(task1);
+        taskManager.addTask(task2);
+        taskManager.addTask(task3);
+        taskManager.addEpic(epic1);
+        taskManager.addSubtask(subtask1);
+
+        TreeSet<Task> result = taskManager.getPrioritizedTasks();
+        Iterator<Task> it = result.iterator();
+        assertEquals(task1, it.next(), "Задачи пересекаются");
+        assertEquals(subtask1, it.next(), "Задачи пересекаются");
+        assertEquals(task3, it.next(), "Задачи пересекаются");
     }
 }

@@ -5,6 +5,7 @@ import org.yandex.praktikum.taskmanager.task.Subtask;
 import org.yandex.praktikum.taskmanager.task.Task;
 
 import java.util.List;
+import java.util.TreeSet;
 
 public interface TaskManager {
     int getNewId();
@@ -32,4 +33,6 @@ public interface TaskManager {
     void getAll();
     void deleteAll();
     List<Task> getHistory();
+
+    TreeSet<Task> getPrioritizedTasks();
 }

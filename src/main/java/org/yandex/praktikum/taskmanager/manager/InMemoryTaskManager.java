@@ -5,22 +5,32 @@ import org.yandex.praktikum.taskmanager.task.Epic;
 import org.yandex.praktikum.taskmanager.task.Subtask;
 import org.yandex.praktikum.taskmanager.task.Task;
 
+import java.time.LocalDateTime;
 import java.util.*;
+import java.util.function.Predicate;
 
 public class InMemoryTaskManager implements TaskManager {
     private int idCount;
 
-    protected final HashMap <Integer, Task> taskMap;
-    protected final HashMap <Integer, Epic> epicMap;
-    protected final HashMap <Integer, Subtask> subtaskMap;
+    protected final HashMap <Integer, Task> taskMap = new HashMap<>();
+    protected final HashMap <Integer, Epic> epicMap = new HashMap<>();
+    protected final HashMap <Integer, Subtask> subtaskMap  = new HashMap<>();
     protected final HistoryManager historyManager;
+    protected final TreeSet<Task> taskTreeSet = new TreeSet<>((o1, o2) -> {
+        if (o1.getStartTime() == null || o1.getDuration() == null) {
+            return 1;
+        }
+        else if (o2.getStartTime() == null || o2.getDuration() == null) {
+            return -1;
+        }
+        else {
+            return o1.getStartTime().compareTo(o2.getStartTime());
+        }
+    });;
 
     public InMemoryTaskManager() {
         this.idCount = 0;
         this.historyManager = Managers.getDefaultHistory();
-        this.subtaskMap = new HashMap<>();
-        this.epicMap = new HashMap<>();
-        this.taskMap = new HashMap<>();
     }
 
     @Override
@@ -31,6 +41,9 @@ public class InMemoryTaskManager implements TaskManager {
     public void addTask(Task task) {
         if(task != null) {
             taskMap.put(task.getId(), task);
+            if (!isIntersected.test(task)) {
+                taskTreeSet.add(task);
+            }
         }
     }
 
@@ -38,6 +51,9 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateTask(Task task) {
         if(task != null && taskMap.containsKey(task.getId())) {
             taskMap.put(task.getId(), task);
+            if (!isIntersected.test(task)) {
+                taskTreeSet.add(task);
+            }
         }
     }
 
@@ -151,6 +167,10 @@ public class InMemoryTaskManager implements TaskManager {
     public void addSubtask(Subtask subtask) {
         if(subtask != null) {
             subtaskMap.put(subtask.getId(), subtask);
+            if (!isIntersected.test(subtask)) {
+                taskTreeSet.add(subtask);
+            }
+
             epicMap.get(subtask.getEpicId()).addSubtask(subtask);
             epicMap.get(subtask.getEpicId()).updateStatus();
         }
@@ -163,6 +183,10 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateSubtask(Subtask subtask) {
         if(subtask != null && subtaskMap.containsKey(subtask.getId())) {
             subtaskMap.put(subtask.getId(), subtask);
+
+            if (!isIntersected.test(subtask)) {
+                taskTreeSet.add(subtask);
+            }
             epicMap.get(subtask.getEpicId()).updateStatus();
         }
     }
@@ -251,4 +275,40 @@ public class InMemoryTaskManager implements TaskManager {
     public List<Task> getHistory(){
         return historyManager.getHistory();
     }
+
+    @Override
+    public TreeSet<Task> getPrioritizedTasks() {
+        return taskTreeSet;
+    }
+
+    private final Predicate<Task> isIntersected = addableTask -> {
+        if(addableTask.getStartTime()==null || addableTask.getDuration()==null) {
+            return false;
+        }
+
+        LocalDateTime addStartTime = addableTask.getStartTime();
+        LocalDateTime addEndTime = addableTask.getEndTime();
+
+        for (Task task : taskTreeSet) {
+            LocalDateTime currentStartTime = task.getStartTime();
+            LocalDateTime currentEndTime = task.getEndTime();
+
+            if (currentStartTime==null || currentEndTime==null) {
+                return false;
+            }
+
+            if (addEndTime.isAfter(currentStartTime) && addEndTime.isBefore(currentEndTime)) {
+                return true;
+            }
+
+            if (addStartTime.isAfter(currentStartTime) && addStartTime.isBefore(currentEndTime)) {
+                return true;
+            }
+
+            if (addStartTime.isEqual(currentStartTime) && addEndTime.isEqual(currentEndTime)) {
+                return true;
+            }
+        }
+        return false;
+    };
 }
