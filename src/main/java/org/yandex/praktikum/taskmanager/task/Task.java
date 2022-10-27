@@ -120,10 +120,12 @@ public class Task {
         LocalDateTime startTime = null;
         Duration duration = null;
 
-        if (!splitInput[5].isEmpty() && !splitInput[6].isEmpty()) {
-            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-            startTime = LocalDateTime.parse(splitInput[5], formatter);
-            duration = Duration.parse(splitInput[6]);
+        if (splitInput.length > 5) {
+            if(!splitInput[5].isEmpty() && !splitInput[6].isEmpty()) {
+                DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+                startTime = LocalDateTime.parse(splitInput[5], formatter);
+                duration = Duration.parse(splitInput[6]);
+            }
         }
 
         switch (type) {
