@@ -22,11 +22,15 @@ public class Task {
         this.type = type;
     }
 
-    public Task(String name, String description, int id, TaskStatus status, TaskType type, Duration duration,
-                LocalDateTime startTime) {
-        this(name, description, id, status, type);
-        this.duration = duration;
+    public Task(String name, String description, int id, TaskStatus status, TaskType type, LocalDateTime startTime,
+                Duration duration) {
+        this.name = name;
+        this.description = description;
+        this.id = id;
+        this.status = status;
+        this.type = type;
         this.startTime = startTime;
+        this.duration = duration;
     }
 
     public String getName() {
@@ -57,7 +61,7 @@ public class Task {
         return startTime;
     }
     public LocalDateTime getEndTime() {
-        if (startTime == null && duration == null) {
+        if (startTime == null || duration == null) {
             return null;
         }
         return startTime.plus(duration);
@@ -76,12 +80,13 @@ public class Task {
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
         return id == task.id && Objects.equals(name, task.name) && Objects.equals(description, task.description)
-                && status == task.status && type == task.type;
+                && status == task.status && type == task.type && Objects.equals(duration, task.duration)
+                && Objects.equals(startTime, task.startTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, id, status, type);
+        return Objects.hash(name, description, id, status, type, duration, startTime);
     }
 
     @Override
@@ -112,19 +117,40 @@ public class Task {
         String name = splitInput[2];
         TaskStatus status = TaskStatus.valueOf(splitInput[3]);
         String description = splitInput[4];
+        LocalDateTime startTime = null;
+        Duration duration = null;
+
+        if (splitInput.length > 5) {
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+            startTime = LocalDateTime.parse(splitInput[5], formatter);
+            duration = Duration.parse(splitInput[6]);
+        }
 
         switch (type) {
             case TASK -> {
+                if (startTime != null && duration != null) {
+                    return new Task(name, description, id, status, type, startTime, duration);
+                }
                 return new Task(name, description, id, status, type);
             }
             case EPIC -> {
+                if (startTime != null && duration != null) {
+                    return new Epic(name, description, id, status, type, startTime, duration);
+                }
                 return new Epic(name, description, id, status, type);
+
             }
             case SUBTASK -> {
+                if (startTime != null && duration != null) {
+                    int epicId = Integer.parseInt(splitInput[7]);
+                    return new Subtask(name, description, id, status, type, startTime, duration, epicId);
+                }
+
                 int epicId = Integer.parseInt(splitInput[5]);
                 return new Subtask(name, description, id, status, type, epicId);
             }
         }
+
         return null;
     }
 }

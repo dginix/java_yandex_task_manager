@@ -1,5 +1,6 @@
 package org.yandex.praktikum.taskmanager.task;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,6 +10,11 @@ public class Epic extends Task{
 
     public Epic(String name, String description, int id, TaskStatus status, TaskType type) {
         super(name, description, id, status, type);
+    }
+
+    public Epic(String name, String description, int id, TaskStatus status, TaskType type, LocalDateTime startTime,
+                Duration duration) {
+        super(name, description, id, status, type, startTime, duration);
     }
 
     public void addSubtask(Subtask subtask){
@@ -23,24 +29,60 @@ public class Epic extends Task{
         return subtaskList;
     }
 
+    //TODO стоит расчитывать время и продолжительность при добавлении подзадачи
     @Override
     public LocalDateTime getStartTime() {
         if (subtaskList.isEmpty()) {
             return null;
         }
 
-        LocalDateTime findStartTime = null;
+        LocalDateTime findStartTime = LocalDateTime.MAX;
         for (Subtask subtask : subtaskList) {
             if (subtask.getStartTime() == null) {
                 continue;
             }
 
-            if (subtask.getStartTime() != null && LocalDateTime.MAX.isAfter(subtask.getStartTime())) {
+            if (findStartTime.isAfter(subtask.getStartTime())) {
                 findStartTime = subtask.getStartTime();
             }
         }
-
         return findStartTime;
+    }
+
+    @Override
+    public Duration getDuration() {
+        if (subtaskList.isEmpty()) {
+            return null;
+        }
+
+        Duration duration = Duration.ZERO;
+
+        for (Subtask subtask : subtaskList) {
+            if (subtask.getDuration() == null) {
+                continue;
+            }
+            duration = duration.plus(subtask.getDuration());
+        }
+        return duration;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        if (subtaskList.isEmpty()) {
+            return null;
+        }
+        LocalDateTime findEndTime = LocalDateTime.MIN;
+
+        for (Subtask subtask : subtaskList) {
+            if (subtask.getEndTime() == null) {
+                continue;
+            }
+
+            if (findEndTime.isBefore(subtask.getEndTime())) {
+                findEndTime = subtask.getEndTime();
+            }
+        }
+        return findEndTime;
     }
 
     @Override
