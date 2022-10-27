@@ -30,14 +30,14 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
                 writer.write("\n");
             }
 
-            if (!taskMap.isEmpty()) {
+            if (!epicMap.isEmpty()) {
                 for (Map.Entry<Integer, Epic> entry : epicMap.entrySet()) {
                     writer.write(entry.getValue().toString());
                 }
                 writer.write("\n");
             }
 
-            if (!taskMap.isEmpty()) {
+            if (!subtaskMap.isEmpty()) {
                 for (Map.Entry<Integer, Subtask> entry : subtaskMap.entrySet()) {
                     writer.write(entry.getValue().toString());
                 }
