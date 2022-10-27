@@ -25,18 +25,18 @@ class SubtaskTest {
     }
 
     @Test
-    public void fromStringTaskNoDurationTest() {
+    public void fromStringSubtaskNoDurationTest() {
         Subtask testStringSubtask = (Subtask) Task.fromString("2,SUBTASK,Subtask1,NEW,descr,,,1");
         assertEquals(subtask1, testStringSubtask, "Подзадачи не совпадают");
     }
     @Test
-    public void toStringTaskNoDurationTest() {
+    public void toStringSubtaskNoDurationTest() {
         assertEquals("2,SUBTASK,Subtask1,NEW,descr,,,1", subtask1.toString(),
                 "Создание подзадачи из задачи без времени не работает корректно");
     }
 
     @Test
-    public void fromStringTaskWithDurationTest() {
+    public void fromStringSubtaskWithDurationTest() {
         LocalDateTime startTime = LocalDateTime.of(2022, 11, 26, 16, 44);
         Duration duration = Duration.ofHours(12).plusMinutes(15);
         subtask1.setStartTime(startTime);
@@ -46,7 +46,7 @@ class SubtaskTest {
         assertEquals(subtask1, testStringTask, "Задачи не совпадают");
     }
     @Test
-    public void toStringTaskWithDurationTest() {
+    public void toStringSubtaskWithDurationTest() {
         LocalDateTime startTime = LocalDateTime.of(2022, 11, 26, 16, 44);
         Duration duration = Duration.ofHours(12).plusMinutes(15);
         subtask1.setStartTime(startTime);
