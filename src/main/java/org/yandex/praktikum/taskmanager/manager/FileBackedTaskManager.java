@@ -111,6 +111,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
         StringBuilder result = new StringBuilder();
         for (Task task : taskList) {
             result.append(task.getId());
+            result.append(",");
         }
         return result.toString();
     }
