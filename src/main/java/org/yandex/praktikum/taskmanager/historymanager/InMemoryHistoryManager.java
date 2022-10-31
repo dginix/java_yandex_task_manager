@@ -10,9 +10,9 @@ import java.util.Map;
 public class InMemoryHistoryManager implements HistoryManager {
     final Map<Integer, TaskNode<Task>> historyListFinder= new HashMap<>();
 
-    public TaskNode<Task> historyListHead;
-    public TaskNode<Task> historyListTail;
-    protected int historyListSize;
+    private TaskNode<Task> historyListHead;
+    private TaskNode<Task> historyListTail;
+    private int historyListSize;
 
     public InMemoryHistoryManager() {
         this.historyListSize = 0;
@@ -27,7 +27,10 @@ public class InMemoryHistoryManager implements HistoryManager {
     @Override
     public void add(Task task) {
         if(task != null) {
-            // TODO не забыть добавить ограничение на 10 задач
+            if (historyListSize >= 10) {
+                int firstTaskId = historyListHead.data.getId();
+                remove(firstTaskId);
+            }
             if (historyListFinder.containsKey(task.getId())) {
                 remove(task.getId());
             }
