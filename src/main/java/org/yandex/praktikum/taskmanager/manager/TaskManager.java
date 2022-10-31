@@ -1,5 +1,6 @@
 package org.yandex.praktikum.taskmanager.manager;
 
+import org.yandex.praktikum.taskmanager.historymanager.HistoryManager;
 import org.yandex.praktikum.taskmanager.task.Epic;
 import org.yandex.praktikum.taskmanager.task.Subtask;
 import org.yandex.praktikum.taskmanager.task.Task;
@@ -35,4 +36,6 @@ public interface TaskManager {
     List<Task> getHistory();
 
     TreeSet<Task> getPrioritizedTasks();
+
+    HistoryManager getHistoryManager();
 }

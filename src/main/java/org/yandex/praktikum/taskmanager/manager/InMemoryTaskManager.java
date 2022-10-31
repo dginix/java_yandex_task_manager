@@ -15,7 +15,7 @@ public class InMemoryTaskManager implements TaskManager {
     protected final HashMap <Integer, Task> taskMap = new HashMap<>();
     protected final HashMap <Integer, Epic> epicMap = new HashMap<>();
     protected final HashMap <Integer, Subtask> subtaskMap  = new HashMap<>();
-    protected final HistoryManager historyManager;
+    public final HistoryManager historyManager;
     protected final TreeSet<Task> taskTreeSet = new TreeSet<>((o1, o2) -> {
         if (o1.getStartTime() == null || o1.getDuration() == null) {
             return 1;
@@ -311,4 +311,8 @@ public class InMemoryTaskManager implements TaskManager {
         }
         return false;
     };
+
+    public HistoryManager getHistoryManager() {
+        return historyManager;
+    }
 }

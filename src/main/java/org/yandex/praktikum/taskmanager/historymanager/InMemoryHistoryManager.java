@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
-    final Map<Integer, TaskNode<Task>> historyListFinder= new HashMap<>();
+    final private Map<Integer, TaskNode<Task>> historyListFinder= new HashMap<>();
 
     private TaskNode<Task> historyListHead;
     private TaskNode<Task> historyListTail;
@@ -111,4 +111,5 @@ public class InMemoryHistoryManager implements HistoryManager {
     public boolean isEmpty() {
         return historyListFinder.isEmpty();
     }
+
 }
